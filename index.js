@@ -10,7 +10,7 @@ app.use(bodyParser.json({ type: 'application/*+json' }));
 
 import(`./lib/newfeeds.js`).then((e) => e.default(app));
 import("./lib/recommendkeyword.js").then((e) => e.default(app));
-
+// trang chủ của api
 app.get("/", (request, response) => {
   response.send("Home");
 });
