@@ -1,11 +1,17 @@
-import { Database, JSONDriver } from 'st.db';
+import { Database, MongoDriver } from 'st.db';
 import { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import colors from "chalk";
 
+
+const mongoUrl = "mongodb+srv://BlackCat-Club:blackcat2k3@blackcat-club.sfgyw.mongodb.net/";
+const dbName = "BlackCat-React";
+const collectionName = "react-data";
 const data = new Database({
-  driver: new JSONDriver("data.json"),
+  driver: new MongoDriver(mongoUrl, dbName, collectionName),
 });
+
 const router = Router();
 
 router.post('/login', async(req, res) => {
@@ -81,10 +87,10 @@ router.patch('/:userId', async (req, res) => {
     // Lưu lại vào cơ sở dữ liệu
     data.set(userId, existingUser);
     
-    console.log(`[${userId}]: Đã cập nhật lại Profile`);
+    console.log(`${colors.blue(`[${userId}]`)}: Đã cập nhật lại Profile`);
     res.status(200).json({ message: 'Cập nhật thành công.' });
   } catch (error) {
-    console.error(`[${userId}]: Lỗi khi cập nhật Profile: ${error.message}`);
+    console.error(`${colors.red(`[${userId}]`)}: Lỗi khi cập nhật Profile: ${error.message}`);
     res.status(500).json({ message: 'Đã xảy ra lỗi.' });
   }
 });
