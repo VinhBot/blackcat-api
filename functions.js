@@ -1,11 +1,9 @@
 import mongodb from "mongodb";
-import stdb from "st.db";
-
-export const MongoData = () => {
-  class MongoDriver {
+ 
+export class MongoDriver {
     // Hàm khởi tạo của lớp, nhận các tùy chọn cấu hình.
     constructor(options) {
-      this.mongoURL = options.setMongoURL;  // Đường dẫn kết nối MongoDB
+      this.mongoURL = "mongodb+srv://BlackCat-Club:blackcat2k3@blackcat-club.sfgyw.mongodb.net/";  // Đường dẫn kết nối MongoDB
       this.databaseName = options.databaseName;  // Tên của cơ sở dữ liệu
       this.collectionName = options.collectionName;  // Tên của bộ sưu tập
       this.connectionOptions = options.connectionOptions;  // Tùy chọn kết nối
@@ -68,14 +66,4 @@ export const MongoData = () => {
       await this.connect();
       await this.collection?.deleteOne({ _id: key });
     };
-  };
-  return {
-    react_data: new stdb.Database({
-      driver: new MongoDriver({
-        setMongoURL: "mongodb+srv://BlackCat-Club:blackcat2k3@blackcat-club.sfgyw.mongodb.net/", /*url của mongodb*/
-        databaseName: "BlackCat-React", /* tên database của dự án */
-        collectionName: "react-data" /*tên gói database*/
-      }),
-    }),
-  };
 };
