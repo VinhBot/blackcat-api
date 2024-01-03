@@ -1,5 +1,6 @@
 // Import các module cần thiết từ thư viện
 import bodyParser from "body-parser";  // Middleware giúp xử lý dữ liệu từ các yêu cầu HTTP
+import mongoose from "mongoose"; // 
 import express from "express";  // Framework web Node.js để xây dựng ứng dụng
 import cors from "cors";  // Middleware giúp xử lý vấn đề CORS (Cross-Origin Resource Sharing)
 // Import các routes liên quan
@@ -24,12 +25,21 @@ app.use((req, res, next) => {
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 // Sử dụng các routes liên quan đến người dùng được định nghĩa trong userRoutes
-app.use("/user", userRoutes);
+app.use("/user/", userRoutes);
 // Sử dụng các routes liên quan đến zing mp3
 app.use("/api/", zingRoutes);
 // thử in lên một cái gì đó
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
-// Lắng nghe trên cổng 5000 và in ra console khi máy chủ bắt đầu chạy
-app.listen(5000, () => console.log("Máy chủ đang chạy"));
+// kết nối đến mongoose
+mongoose.connect(process.env.mongourl, {
+  dbName: "BlackCat-React",
+}).then(() => {
+  console.log("Đã kết nối với cơ sở dữ liệu");
+}).then(() => {
+  // Lắng nghe trên cổng 5000 và in ra console khi máy chủ bắt đầu chạy
+  app.listen(5000, () => console.log("Máy chủ đang chạy"));
+}).catch((err) => {
+  console.log("Không kết nối được với cơ sở dữ liệu", err);
+});
