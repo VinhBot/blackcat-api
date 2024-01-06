@@ -14,10 +14,7 @@ router.post("/login", async (req, res) => {
     const existingUser = await account.findOne({ username: req.body.username });
     if (!existingUser) return res.status(404);
     // So sánh mật khẩu đã hash
-    const isPasswordCorrect = await bcrypt.compare(
-      req.body.password,
-      existingUser.password,
-    );
+    const isPasswordCorrect = await bcrypt.compare(req.body.password, existingUser.password);
     if (!isPasswordCorrect) return res.status(400);
     // Tạo token JWT nếu thông tin đăng nhập hợp lệ
     const token = jwt.sign(
@@ -57,6 +54,7 @@ router.post("/signup", async (req, res) => {
       profileImage: profileImage,
       password: hashedPassword,
       username: username,
+      isAdmin: false,
       name: name,
       favouritePlaylist: [],
       favouriteArtist: [],
@@ -105,7 +103,7 @@ router.patch("/:username", async (req, res) => {
 router.post('/:username/like', async (req, res) => {
   const { username } = req.params;
   const { type, item } = req.body;
-  
+
   const updateUser = async (id, update) => {
     try {
       return await account.updateOne({ username: id }, update);
@@ -113,13 +111,13 @@ router.post('/:username/like', async (req, res) => {
       throw error;
     }
   };
-  
+
   try {
     const user = await account.findOne({ username: username });
-    if(!user) return res.status(404).json({ 
+    if (!user) return res.status(404).json({
       message: 'Không tìm thấy người dùng'
     });
-  
+
     let likeSelector;
     if (type === 1) {
       likeSelector = user.favouritePlaylist.find((e) => e?.encodeId === item?.encodeId);
@@ -132,21 +130,21 @@ router.post('/:username/like', async (req, res) => {
 
     if (!isLike) {
       // Add to favorites
-      await updateUser(username, { 
+      await updateUser(username, {
         $push: {
-          [`favourite${type === 3 ? 'Artist' : type === 1 ? 'Playlist' : 'Songs'}`]: item 
-        } 
+          [`favourite${type === 3 ? 'Artist' : type === 1 ? 'Playlist' : 'Songs'}`]: item
+        }
       });
-      res.json({ 
+      res.json({
         data: user,
         message: 'Added to favorites'
       });
     } else {
       // Remove from favorites
       await updateUser(username, { $pull: { [`favourite${type === 3 ? 'Artist' : type === 1 ? 'Playlist' : 'Songs'}`]: item } });
-      res.json({ 
+      res.json({
         data: user,
-        message: 'Removed from favorites' 
+        message: 'Removed from favorites'
       });
     }
   } catch (error) {
@@ -155,9 +153,9 @@ router.post('/:username/like', async (req, res) => {
   }
 });
 //
-router.get("/finduser/:username", async(request, response) => {
+router.get("/finduser/:username", async (request, response) => {
   const user = await account.findOne({ username: request.params.username });
-  response.status(200).json({ 
+  response.status(200).json({
     message: "Lấy thông tin người dùng thành công",
     data: user,
   });

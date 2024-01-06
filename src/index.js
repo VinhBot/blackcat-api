@@ -41,7 +41,7 @@ app.get('/', (request, response) => {
   response.sendFile(path.join(dirname, "..", "Public", "main.html"));
 });
 // kết nối đến mongoose
-mongoose.connect(process.env.mongourl, {
+mongoose.connect(process.env.mongourl || "mongodb+srv://BlackCat-Club:blackcat2k3@blackcat-club.sfgyw.mongodb.net/", {
   dbName: "BlackCat-React",
 }).then(() => {
   console.log("Đã kết nối với cơ sở dữ liệu");
