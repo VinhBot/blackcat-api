@@ -1,4 +1,4 @@
-entrypoint = "index.js"
+entrypoint = "src/index.js"
 modules = ["nodejs-18:v3-20230608-f4cd419"]
 hidden = [".config", "package-lock.json"]
 

@@ -117,7 +117,7 @@ router.post('/:username/like', async (req, res) => {
   try {
     const user = await account.findOne({ username: username });
     if(!user) return res.status(404).json({ 
-      error: 'User not found'
+      message: 'Không tìm thấy người dùng'
     });
   
     let likeSelector;
@@ -127,8 +127,7 @@ router.post('/:username/like', async (req, res) => {
       likeSelector = user.favouriteSongs.find((e) => e?.encodeId === item?.encodeId);
     } else if (type === 3) {
       likeSelector = user.favouriteArtist.find((e) => e?.id === item?.id);
-    }
-
+    };
     let isLike = !!likeSelector;
 
     if (!isLike) {
@@ -155,12 +154,14 @@ router.post('/:username/like', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-// 
-router.get("/finduser/:username", async(req, res) => {
-  const user = await account.findOne({ username: req.params.username });
-  res.json({ 
+//
+router.get("/finduser/:username", async(request, response) => {
+  const user = await account.findOne({ username: request.params.username });
+  response.status(200).json({ 
+    message: "Lấy thông tin người dùng thành công",
     data: user,
   });
 });
 // Xuất router để sử dụng trong ứng dụng Express
 export default router;
+
