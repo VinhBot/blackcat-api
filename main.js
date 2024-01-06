@@ -6,8 +6,8 @@ import cors from "cors";  // Middleware giúp xử lý vấn đề CORS (Cross-O
 import path from "path";
 import url from "url";
 // Import các routes liên quan
-import userRoutes from "./routes/user.js";  // Import các routes liên quan đến người dùng từ file user.js
-import zingRoutes from "./routes/zingmp3.js"; // Import các routers liên quan đến api của zing mp3
+import userRoutes from "./dist/routes/user.js";  // Import các routes liên quan đến người dùng từ file user.js
+import zingRoutes from "./dist/routes/zingmp3.js"; // Import các routers liên quan đến api của zing mp3
 // Lấy thư mục chứa file hiện tại từ đường dẫn tuyệt đối
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const app = express(); // Tạo một đối tượng Express
@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Thiết lập các header cho phép (Content-Type, Authorization)
   next(); // Chuyển tiếp request sang middleware tiếp theo
 });
-app.use(express.static(path.join(dirname, "..", "Public"))); // 
+app.use(express.static(path.join(dirname, ".", "Public"))); // 
 // Sử dụng middleware "body-parser" để xử lý dữ liệu JSON và dữ liệu từ form
 app.use(bodyParser.json({ // được sử dụng để xử lý dữ liệu JSON trong yêu cầu.
   limit: "30mb", // giới hạn dung lượng dữ liệu JSON được chấp nhận.
@@ -38,7 +38,7 @@ app.use("/api/", zingRoutes);
 // thử in lên một cái gì đó
 app.get('/', (request, response) => {
   // Gửi tệp HTML về trình duyệt
-  response.sendFile(path.join(dirname, "..", "Public", "main.html"));
+  response.sendFile(path.join(dirname, ".", "Public", "main.html"));
 });
 // kết nối đến mongoose
 mongoose.connect(process.env.mongourl || "mongodb+srv://BlackCat-Club:blackcat2k3@blackcat-club.sfgyw.mongodb.net/", {
